@@ -1,0 +1,22 @@
+#!/bin/bash
+echo -n "Enter the username : "
+
+read Name
+
+#echo "You entered: $Name"
+
+if [ -z "$(getent passwd $Name)" ]; then
+    echo "$Name user does NOT exist."
+else
+    echo "
+We are gathering permissions info for user $Name . . . . . . . . . . . . . . .
+"
+        getfacl -p /home/wind/* | grep -B 20 $Name > /tmp/perm/output/t_perm.txt
+
+        cat /tmp/perm/output/t_perm.txt | grep -w "file\|$Name" > /tmp/perm/output/$Name-wind.csv
+        echo "
+Gathered info saved in /tmp/perm/output/$Name-wind.csv
+        "
+        rm -rf /tmp/perm/output/t_perm.txt
+fi
+
